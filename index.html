@@ -1,67 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Quick Count</title>
-</head>
-<body>
-    <div id="content">
-        <div id="total-votes">
-            <div>
-                <span>Jokowi - Ma'aruf</span>
-                <span id="pas1-total-votes"></span>
-                <span id="pas1-total-votes-percentage"></span>
-            </div>
-            <div>
-                <span>Prabowo - Sandi</span>
-                <span id="pas2-total-votes"></span>
-                <span id="pas2-total-votes-percentage"></span>
-            </div>
-        </div>
-    </div>
-    <script>
-        var url_source_data = 'https://kawal-c1.appspot.com/api/c/0?' + Math.round((new Date()).getTime() / 1000);;
+<html>
+    <body>
 
-        document.addEventListener("DOMContentLoaded", function() {            
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    var content_div = document.getElementById('content');
-                    var response = JSON.parse(this.responseText);
-                    
-                    var total_votes = 0;
-                    var total_vote_01 = 0;
-                    var total_vote_02 = 0;
-                    var tmp_res_data;
+        <p>Click the button to get your coordinates.</p>
 
-                    Object.keys(response.data).map(function(data_content, value) {
-                        tmp_res_data = response.data[data_content].sum;
-                        
-                        total_vote_01 += isUndefined(tmp_res_data.pas1) ? 0 : Number(tmp_res_data.pas1);
-                        total_vote_02 += isUndefined(tmp_res_data.pas2) ? 0 : Number(tmp_res_data.pas2);
-                    });
+        <button onclick="getLocation()">Try It</button>
 
-                    total_votes = total_vote_01 + total_vote_02;
+        <p id="demo"></p>
 
-                    document.getElementById('pas1-total-votes').innerHTML = total_vote_01;
-                    document.getElementById('pas1-total-votes-percentage').innerHTML = (total_vote_01 * 100 / total_votes).toFixed(2) + '%';
-                    document.getElementById('pas2-total-votes').innerHTML = total_vote_02;
-                    document.getElementById('pas2-total-votes-percentage').innerHTML = (total_vote_02 * 100 / total_votes).toFixed(2) + '%';
-                }
-            };
-            xhttp.open("GET", url_source_data, true);
-            xhttp.send();
-        });
+        <script>
+            var x = document.getElementById("demo");
 
-        function isUndefined(content)
-        {
-            if (typeof content === 'undefined')
-                return true;
-            else
-                return false;
-        }
-    </script>
-</body>
+            function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else { 
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+            }
+
+            function showPosition(position) {
+            x.innerHTML = "Latitude: " + position.coords.latitude + 
+            "<br>Longitude: " + position.coords.longitude;
+            }
+        </script>
+
+    </body>
 </html>
